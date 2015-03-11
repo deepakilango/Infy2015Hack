@@ -1,2 +1,6 @@
 To Do list for 2015 hackathon
+<<<<<<< HEAD
 to be modified
+=======
+-----------------------------
+>>>>>>> d7954b9d862a2954b4884e18f06be168f9018da4
