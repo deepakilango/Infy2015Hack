@@ -1,0 +1,4 @@
+Overwrite local with remote
+---------------------------
+git reset --hard  HEAD
+git pull
