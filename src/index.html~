@@ -26,7 +26,7 @@
   <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72-precomposed.png">
   <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57-precomposed.png">
   <link rel="shortcut icon" href="img/favicon.png">
-	<script type="text/javascript" src="/socket.io.js"></script>  
+  
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/scripts.js"></script>
@@ -41,7 +41,7 @@
 	        console.log(data);
 	  });
 
-	function flyme(){
+	function texttype(){
   		console.log('Send trigger CPP Drone command');
 		socket.emit('triggerCPPDroneApp', 'testData');
         }
@@ -63,7 +63,7 @@
 				</ol>
 				<div class="carousel-inner">
 					<div class="item active">
-						<img alt="" src="/img/BebopDrone.jpg">
+						<img alt="" src="/home/vigneshwaran/src/img/BebopDrone.jpg">
 						<div class="carousel-caption">
 							<h4>
 								DroneIT
@@ -83,8 +83,7 @@
 				<p>
 					
 				<p>
-					<a <a href="javascript:flyme()" class="btn btn-lg btn-success"><span class="glyphicon glyphicon-plane"></span> Fly me</a>
-<input type="text" id="myxcoord"/>
+					<a <a href="#" class="btn btn-lg btn-success"><span class="glyphicon glyphicon-plane"></span> Fly me</a>
 				</p>
 			</div> 
 			
