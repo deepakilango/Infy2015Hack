@@ -1,3 +1,10 @@
+/shellscript/images/**
+/shellscript/tmp/**
+/shellscript/outimages/**
+/commandlist~
+/shellscript/doPull.sh~
+/shellscript/doOCR.sh~
+/shellscript/doFTP.txt~
 /Source/CBebopInterface.h~
 /Source/main.cpp~
 /Source/CNetworkSettings.h~
