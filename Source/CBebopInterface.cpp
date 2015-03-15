@@ -100,6 +100,35 @@ bool CBebopInterface::setCameraAngle(int angleX, int angleY) {
 
 }
 
+void CBebopInterface::initializePictureSettings(){
+	CCommandPacket packet( 128 );
+	LOG( INFO ) << "DroneIT:: Entering method  - initializePictureSettings.";
+	eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_Generator_GenerateARDrone3PictureSettingsPictureFormatSelection (
+			packet.m_pData,
+			packet.m_bufferSize,
+			&packet.m_dataSize,
+			ARCOMMANDS_ARDRONE3_PICTURESETTINGS_PICTUREFORMATSELECTION_TYPE_JPEG);
+	LOG( INFO ) << "DroneIT:: Command initiated - ARCOMMANDS_Generator_GenerateARDrone3PictureSettingsPictureFormatSelection";
+	LOG( INFO ) << cmdError;
+	if( cmdError == ARCOMMANDS_GENERATOR_OK )
+	{
+		// Command should be acknowledged
+		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND_WITH_ACK, true ) )
+		{
+			LOG( ERROR ) << "DroneIT:: Failed to send command - picture settings.";
+			return;
+		}
+	}
+	else
+	{
+		LOG( ERROR ) << "DroneIT:: Failed to generate command - picture settings. Err: " << cmdError;
+		return;
+	}
+	LOG( INFO ) << "DroneIT:: Exiting method  - picture settings.";
+	return;
+}
+
+
 bool CBebopInterface::takePicture(int number)
 {
 	CCommandPacket packet( 128 );
@@ -128,7 +157,7 @@ bool CBebopInterface::takePicture(int number)
 		LOG( ERROR ) << "DroneIT:: Failed to generate command - take picture. Err: " << cmdError;
 		return false;
 	}
-	LOG( INFO ) << "DroneIT:: Exiting method  - take picture.";
+	LOG( INFO ) << "DroneIT:: Picture taken";
 	return true;
 
 }

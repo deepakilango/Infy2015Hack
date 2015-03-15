@@ -40,6 +40,7 @@ public:
 	bool sendPCMD(int number);
 	bool setCameraAngle(int angleX, int angleY);
 	bool setAltitudeListener(TPilotCommand &commandIn);
+	void initializePictureSettings();
 };
 
 }
