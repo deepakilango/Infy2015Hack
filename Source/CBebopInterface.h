@@ -38,7 +38,7 @@ public:
 	bool ResetGpsHome();
 	bool takePicture(int number);
 	bool sendPCMD(int number);
-	bool setCameraAngle(int number);
+	bool setCameraAngle(int angleX, int angleY);
 	bool setAltitudeListener(TPilotCommand &commandIn);
 };
 

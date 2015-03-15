@@ -23,17 +23,17 @@ void CBebopInterface::Update()
 
 void commonStateBatteryStateChangedCall(uint8_t percent, void *custom)
 {
-LOG( INFO ) << "Speed is " << percent;
+LOG( INFO ) << "DroneIT:: Speed is " << percent;
 }
 
 void ARDrone3PilotingStateAltitudeChangedCallback(double altitude, void *custom)
 {
-LOG( INFO ) << "Altitude is " << altitude;
+LOG( INFO ) << "DroneIT:: Altitude is " << altitude;
 }
 
 bool CBebopInterface::setAltitudeListener(TPilotCommand& commandIn)
 {
-LOG( INFO ) << "Entering method - setAltitudeListener.";
+LOG( INFO ) << "DroneIT:: Entering method - setAltitudeListener.";
 ARCOMMANDS_Decoder_SetARDrone3PilotingStateAltitudeChangedCallback(ARDrone3PilotingStateAltitudeChangedCallback, &commandIn);
 ARCOMMANDS_Decoder_SetCommonCommonStateBatteryStateChangedCallback(commonStateBatteryStateChangedCall, &commandIn);
 return true;
@@ -54,46 +54,47 @@ bool CBebopInterface::Takeoff()
 		// Command should be acknowledged
 		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND_WITH_ACK, true ) )
 		{
-			LOG( ERROR ) << "Failed to send takeoff command.";
+			LOG( ERROR ) << "DroneIT:: Failed to send takeoff command.";
 			return false;
 		}
 	}
 	else
 	{
-		LOG( ERROR ) << "Failed to generate takeoff command. Err: " << cmdError;
+		LOG( ERROR ) << "DroneIT:: Failed to generate takeoff command. Err: " << cmdError;
 		return false;
 	}
 
 	return true;
 }
 
-bool CBebopInterface::setCameraAngle(int number) {
+bool CBebopInterface::setCameraAngle(int angleX, int angleY) {
 	CCommandPacket packet( 128 );
-	LOG( INFO ) << "Entering method  - set camera angle.";
-	LOG( INFO ) << number;
+	LOG( INFO ) << "DroneIT:: Entering method  - set camera angle.";
+	LOG( INFO ) << "DroneIT:: X: " << angleX;
+	LOG( INFO ) << "DroneIT:: Y: " << angleY;
 	// Generate command
 	eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_Generator_GenerateARDrone3CameraOrientation(
 			packet.m_pData,
 			packet.m_bufferSize,
 			&packet.m_dataSize,
-			number, number );
-	LOG( INFO ) << "Command initiated - ARCOMMANDS_Generator_GenerateARDrone3CameraOrientation";
+			angleY, angleX );
+	LOG( INFO ) << "DroneIT:: Command initiated - ARCOMMANDS_Generator_GenerateARDrone3CameraOrientation";
 	LOG( INFO ) << cmdError;
 	if( cmdError == ARCOMMANDS_GENERATOR_OK )
 	{
 		// Command should be acknowledged
 		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND_WITH_ACK, true ) )
 		{
-			LOG( ERROR ) << "Failed to send command - change angle.";
+			LOG( ERROR ) << "DroneIT:: Failed to send command - change angle.";
 			return false;
 		}
 	}
 	else
 	{
-		LOG( ERROR ) << "Failed to generate command - change angle. Err: " << cmdError;
+		LOG( ERROR ) << "DroneIT:: Failed to generate command - change angle. Err: " << cmdError;
 		return false;
 	}
-	LOG( INFO ) << "Exiting method  - change angle.";
+	LOG( INFO ) << "DroneIT:: Exiting method  - change angle.";
 	return true;
 
 
@@ -102,7 +103,7 @@ bool CBebopInterface::setCameraAngle(int number) {
 bool CBebopInterface::takePicture(int number)
 {
 	CCommandPacket packet( 128 );
-	LOG( INFO ) << "Entering method  - take picture.";
+	LOG( INFO ) << "DroneIT:: Entering method  - take picture.";
 	LOG( INFO ) << number;
 	// Generate command
 	eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_Generator_GenerateARDrone3MediaRecordPicture(
@@ -110,7 +111,7 @@ bool CBebopInterface::takePicture(int number)
 			packet.m_bufferSize,
 			&packet.m_dataSize,
 			number );
-	LOG( INFO ) << "Command initiated - ARCOMMANDS_Generator_GenerateARDrone3MediaRecordPicture";
+	LOG( INFO ) << "DroneIT:: Command initiated - ARCOMMANDS_Generator_GenerateARDrone3MediaRecordPicture";
 	LOG( INFO ) << cmdError;
 	LOG( INFO ) << packet.m_pData;
 	if( cmdError == ARCOMMANDS_GENERATOR_OK )
@@ -118,16 +119,16 @@ bool CBebopInterface::takePicture(int number)
 		// Command should be acknowledged
 		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND_WITH_ACK, true ) )
 		{
-			LOG( ERROR ) << "Failed to send command - take picture.";
+			LOG( ERROR ) << "DroneIT:: Failed to send command - take picture.";
 			return false;
 		}
 	}
 	else
 	{
-		LOG( ERROR ) << "Failed to generate command - take picture. Err: " << cmdError;
+		LOG( ERROR ) << "DroneIT:: Failed to generate command - take picture. Err: " << cmdError;
 		return false;
 	}
-	LOG( INFO ) << "Exiting method  - take picture.";
+	LOG( INFO ) << "DroneIT:: Exiting method  - take picture.";
 	return true;
 
 }
@@ -137,7 +138,7 @@ bool CBebopInterface::sendPCMD(int number)
 {
 
 	CCommandPacket packet( 128 );
-	LOG( INFO ) << "Entering method  - sendPCMD.";
+	LOG( INFO ) << "DroneIT:: Entering method  - sendPCMD.";
 	// Generate command
 	eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_Generator_GenerateARDrone3PilotingPCMD(
 			packet.m_pData,
@@ -150,7 +151,7 @@ bool CBebopInterface::sendPCMD(int number)
 			0, //gaz
 			0 //psi
 		 );
-	LOG( INFO ) << "Command initiated - ARCOMMANDS_Generator_GenerateARDrone3PilotingPCMD";
+	LOG( INFO ) << "DroneIT:: Command initiated - ARCOMMANDS_Generator_GenerateARDrone3PilotingPCMD";
 	LOG( INFO ) << cmdError;
 	LOG( INFO ) << packet.m_pData;
 	if( cmdError == ARCOMMANDS_GENERATOR_OK )
@@ -158,17 +159,17 @@ bool CBebopInterface::sendPCMD(int number)
 		// Command should be acknowledged
 		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND_WITH_ACK, true ) )
 		{
-			LOG( ERROR ) << "Failed to send command - PCMD.";
+			LOG( ERROR ) << "DroneIT:: Failed to send command - PCMD.";
 			return false;
 		}
 		
 	}
 	else
 	{
-		LOG( ERROR ) << "Failed to generate command - PCMD. Err: " << cmdError;
+		LOG( ERROR ) << "DroneIT:: Failed to generate command - PCMD. Err: " << cmdError;
 		return false;
 	}
-	LOG( INFO ) << "Exiting method  - PCMD.";
+	LOG( INFO ) << "DroneIT:: Exiting method  - PCMD.";
 	return true;
 }
 
@@ -187,13 +188,13 @@ bool CBebopInterface::Land()
 		// Command should be acknowledged
 		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND_WITH_ACK, true ) )
 		{
-			LOG( ERROR ) << "Failed to send landing command.";
+			LOG( ERROR ) << "DroneIT:: Failed to send landing command.";
 			return false;
 		}
 	}
 	else
 	{
-		LOG( ERROR ) << "Failed to generate landing command. Err: " << cmdError;
+		LOG( ERROR ) << "DroneIT:: Failed to generate landing command. Err: " << cmdError;
 		return false;
 	}
 
@@ -215,13 +216,13 @@ bool CBebopInterface::Emergency()
 		// Command should be acknowledged
 		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND_WITH_ACK, true ) )
 		{
-			LOG( ERROR ) << "Failed to send emergency command.";
+			LOG( ERROR ) << "DroneIT:: Failed to send emergency command.";
 			return false;
 		}
 	}
 	else
 	{
-		LOG( ERROR ) << "Failed to generate emergency command. Err: " << cmdError;
+		LOG( ERROR ) << "DroneIT:: Failed to generate emergency command. Err: " << cmdError;
 		return false;
 	}
 
@@ -244,13 +245,13 @@ bool CBebopInterface::NavigateHome( ENavigateHome startOrStopIn )
 		// Command should be acknowledged
 		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND_WITH_ACK, true ) )
 		{
-			LOG( ERROR ) << "Failed to send NavigateHome command.";
+			LOG( ERROR ) << "DroneIT:: Failed to send NavigateHome command.";
 			return false;
 		}
 	}
 	else
 	{
-		LOG( ERROR ) << "Failed to generate NavigateHome command. Err: " << cmdError;
+		LOG( ERROR ) << "DroneIT:: Failed to generate NavigateHome command. Err: " << cmdError;
 		return false;
 	}
 
@@ -264,26 +265,26 @@ bool CBebopInterface::readNavData()
 	// Command should not be acknowledged
 	if( !m_networkInterface.ReadData( packet, EInboundBufferId::INBOUND) )
 	{
-		LOG( ERROR ) << "Failed to receive data.";
+		LOG( ERROR ) << "DroneIT:: Failed to receive data.";
 		return false;
 	}
 	else
 	{
-		LOG( INFO ) << "Read success ";
+		LOG( INFO ) << "DroneIT:: Read success ";
 		// Decode data
 		eARCOMMANDS_DECODER_ERROR cmdError = ARCOMMANDS_Decoder_DecodeBuffer(
 			packet.m_pData,
 			packet.m_bufferSize);
-		LOG(INFO) << "Data :==: " << packet.m_pData;
-		LOG(INFO) << "cmdError :==: " << cmdError;
+		LOG(INFO) << "DroneIT:: Data :==: " << packet.m_pData;
+		LOG(INFO) << "DroneIT:: cmdError :==: " << cmdError;
 		if( cmdError == ARCOMMANDS_DECODER_OK )
 		{
-			LOG( INFO ) << "Decoded data successfully";
+			LOG( INFO ) << "DroneIT:: Decoded data successfully";
 
 		}
 		else
 		{
-			LOG( ERROR ) << "Failed to decode receive data";
+			LOG( ERROR ) << "DroneIT:: Failed to decode receive data";
 			return false;
 		}
 
@@ -314,13 +315,13 @@ bool CBebopInterface::SendPilotCommand( const TPilotCommand& commandIn )
 		// Command should not be acknowledged
 		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND, true ) )
 		{
-			LOG( ERROR ) << "Failed to send Pilot Command.";
+			LOG( ERROR ) << "DroneIT:: Failed to send Pilot Command.";
 			return false;
 		}
 	}
 	else
 	{
-		LOG( ERROR ) << "Failed to generate Pilot Command. Err: " << cmdError;
+		LOG( ERROR ) << "DroneIT:: Failed to generate Pilot Command. Err: " << cmdError;
 		return false;
 	}
 
@@ -343,13 +344,13 @@ bool CBebopInterface::SetAutoTakeoffMode( EAutoTakeoffMode modeIn )
 		// Command should be acknowledged
 		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND_WITH_ACK, true ) )
 		{
-			LOG( ERROR ) << "Failed to send AutoTakeoffMode command.";
+			LOG( ERROR ) << "DroneIT:: Failed to send AutoTakeoffMode command.";
 			return false;
 		}
 	}
 	else
 	{
-		LOG( ERROR ) << "Failed to generate AutoTakeoffMode command. Err: " << cmdError;
+		LOG( ERROR ) << "DroneIT:: Failed to generate AutoTakeoffMode command. Err: " << cmdError;
 		return false;
 	}
 
@@ -372,13 +373,13 @@ bool CBebopInterface::Flip( EFlipDirection directionIn )
 		// Command should be acknowledged
 		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND_WITH_ACK, true ) )
 		{
-			LOG( ERROR ) << "Failed to send Flip command.";
+			LOG( ERROR ) << "DroneIT:: Failed to send Flip command.";
 			return false;
 		}
 	}
 	else
 	{
-		LOG( ERROR ) << "Failed to generate Flip command. Err: " << cmdError;
+		LOG( ERROR ) << "DroneIT:: Failed to generate Flip command. Err: " << cmdError;
 		return false;
 	}
 
@@ -401,13 +402,13 @@ bool CBebopInterface::SetMaxAltitude( float maxAltitudeMetersIn )
 		// Command should be acknowledged
 		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND_WITH_ACK, true ) )
 		{
-			LOG( ERROR ) << "Failed to send AutoTakeoffMode command.";
+			LOG( ERROR ) << "DroneIT:: Failed to send AutoTakeoffMode command.";
 			return false;
 		}
 	}
 	else
 	{
-		LOG( ERROR ) << "Failed to generate AutoTakeoffMode command. Err: " << cmdError;
+		LOG( ERROR ) << "DroneIT:: Failed to generate AutoTakeoffMode command. Err: " << cmdError;
 		return false;
 	}
 
@@ -430,13 +431,13 @@ bool CBebopInterface::SetMaxTilt( float maxTiltDegreesIn )
 		// Command should be acknowledged
 		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND_WITH_ACK, true ) )
 		{
-			LOG( ERROR ) << "Failed to send SetMaxTilt command.";
+			LOG( ERROR ) << "DroneIT:: Failed to send SetMaxTilt command.";
 			return false;
 		}
 	}
 	else
 	{
-		LOG( ERROR ) << "Failed to generate SetMaxTilt command. Err: " << cmdError;
+		LOG( ERROR ) << "DroneIT:: Failed to generate SetMaxTilt command. Err: " << cmdError;
 		return false;
 	}
 
@@ -459,13 +460,13 @@ bool CBebopInterface::SetMaxVerticalSpeed( float maxVerticalSpeedMetersPerSecIn 
 		// Command should be acknowledged
 		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND_WITH_ACK, true ) )
 		{
-			LOG( ERROR ) << "Failed to send SetMaxVerticalSpeed command.";
+			LOG( ERROR ) << "DroneIT:: Failed to send SetMaxVerticalSpeed command.";
 			return false;
 		}
 	}
 	else
 	{
-		LOG( ERROR ) << "Failed to generate SetMaxVerticalSpeed command. Err: " << cmdError;
+		LOG( ERROR ) << "DroneIT:: Failed to generate SetMaxVerticalSpeed command. Err: " << cmdError;
 		return false;
 	}
 
@@ -488,13 +489,13 @@ bool CBebopInterface::SetMaxRotationSpeed( float maxRotationSpeedDegPerSecIn )
 		// Command should be acknowledged
 		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND_WITH_ACK, true ) )
 		{
-			LOG( ERROR ) << "Failed to send SetMaxRotationSpeed command.";
+			LOG( ERROR ) << "DroneIT:: Failed to send SetMaxRotationSpeed command.";
 			return false;
 		}
 	}
 	else
 	{
-		LOG( ERROR ) << "Failed to generate SetMaxRotationSpeed command. Err: " << cmdError;
+		LOG( ERROR ) << "DroneIT:: Failed to generate SetMaxRotationSpeed command. Err: " << cmdError;
 		return false;
 	}
 
@@ -517,13 +518,13 @@ bool CBebopInterface::SetAbsoluteControlMode( EAbsoluteControlMode modeIn )
 		// Command should be acknowledged
 		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND_WITH_ACK, true ) )
 		{
-			LOG( ERROR ) << "Failed to send SetAbsoluteControlMode command.";
+			LOG( ERROR ) << "DroneIT:: Failed to send SetAbsoluteControlMode command.";
 			return false;
 		}
 	}
 	else
 	{
-		LOG( ERROR ) << "Failed to generate SetAbsoluteControlMode command. Err: " << cmdError;
+		LOG( ERROR ) << "DroneIT:: Failed to generate SetAbsoluteControlMode command. Err: " << cmdError;
 		return false;
 	}
 
@@ -546,13 +547,13 @@ bool CBebopInterface::SetHullProtectionPresence( EHullPresence presenceIn )
 		// Command should be acknowledged
 		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND_WITH_ACK, true ) )
 		{
-			LOG( ERROR ) << "Failed to send SetHullProtectionPresence command.";
+			LOG( ERROR ) << "DroneIT:: Failed to send SetHullProtectionPresence command.";
 			return false;
 		}
 	}
 	else
 	{
-		LOG( ERROR ) << "Failed to generate SetHullProtectionPresence command. Err: " << cmdError;
+		LOG( ERROR ) << "DroneIT:: Failed to generate SetHullProtectionPresence command. Err: " << cmdError;
 		return false;
 	}
 
@@ -575,13 +576,13 @@ bool CBebopInterface::SetOutdoorMode( EOutdoorMode modeIn )
 		// Command should be acknowledged
 		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND_WITH_ACK, true ) )
 		{
-			LOG( ERROR ) << "Failed to send SetOutdoorMode command.";
+			LOG( ERROR ) << "DroneIT:: Failed to send SetOutdoorMode command.";
 			return false;
 		}
 	}
 	else
 	{
-		LOG( ERROR ) << "Failed to generate SetOutdoorMode command. Err: " << cmdError;
+		LOG( ERROR ) << "DroneIT:: Failed to generate SetOutdoorMode command. Err: " << cmdError;
 		return false;
 	}
 
@@ -606,13 +607,13 @@ bool CBebopInterface::SetGpsHomeLocation( const TGpsHomeLocation& locationIn )
 		// Command should be acknowledged
 		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND_WITH_ACK, true ) )
 		{
-			LOG( ERROR ) << "Failed to send SetGpsHomeLocation command.";
+			LOG( ERROR ) << "DroneIT:: Failed to send SetGpsHomeLocation command.";
 			return false;
 		}
 	}
 	else
 	{
-		LOG( ERROR ) << "Failed to generate SetGpsHomeLocation command. Err: " << cmdError;
+		LOG( ERROR ) << "DroneIT:: Failed to generate SetGpsHomeLocation command. Err: " << cmdError;
 		return false;
 	}
 
@@ -634,13 +635,13 @@ bool rebop::CBebopInterface::FlatTrim()
 		// Command should be acknowledged
 		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND_WITH_ACK, true ) )
 		{
-			LOG( ERROR ) << "Failed to send takeoff command.";
+			LOG( ERROR ) << "DroneIT:: Failed to send takeoff command.";
 			return false;
 		}
 	}
 	else
 	{
-		LOG( ERROR ) << "Failed to generate flat trim command. Err: " << cmdError;
+		LOG( ERROR ) << "DroneIT:: Failed to generate flat trim command. Err: " << cmdError;
 		return false;
 	}
 
@@ -662,13 +663,13 @@ bool CBebopInterface::ResetGpsHome()
 		// Command should be acknowledged
 		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND_WITH_ACK, true ) )
 		{
-			LOG( ERROR ) << "Failed to send ResetGpsHome command.";
+			LOG( ERROR ) << "DroneIT:: Failed to send ResetGpsHome command.";
 			return false;
 		}
 	}
 	else
 	{
-		LOG( ERROR ) << "Failed to generate ResetGpsHome command. Err: " << cmdError;
+		LOG( ERROR ) << "DroneIT:: Failed to generate ResetGpsHome command. Err: " << cmdError;
 		return false;
 	}
 
