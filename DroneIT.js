@@ -49,6 +49,22 @@ app.get('/img/BebopDrone.jpg', function(req, res){
   res.sendfile('./img/BebopDrone.jpg');
 });
 
+app.get('/img/Intermodal2.jpg', function(req, res){
+	console.log("image");
+  res.sendfile('./img/Intermodal2.jpg');
+});
+
+app.get('/img/IntermodalTerminal3.png', function(req, res){
+	console.log("image");
+  res.sendfile('./img/IntermodalTerminal3.png');
+});
+
+app.get('/img/Intermodal4.jpg', function(req, res){
+	console.log("image");
+  res.sendfile('./img/Intermodal4.jpg');
+});
+
+
 app.get('/css/bootstrap.min.css', function(req, res){
 	console.log("image");
   res.sendfile(__dirname + '/css/bootstrap.min.css');
@@ -72,5 +88,20 @@ app.get('/js/scripts.js', function(req, res){
   res.sendfile('./js/scripts.js');
 });
 
+app.get('/fonts/glyphicons-halflings-regular.eot', function(req, res){
+	console.log("image");
+  res.sendfile('./fonts/glyphicons-halflings-regular.eot');
+});
 
-console.log('End of Server nodejs DroneApp');
+app.get('/fonts/glyphicons-halflings-regular.svg', function(req, res){
+	console.log("image");
+  res.sendfile('./fonts/glyphicons-halflings-regular.svg');
+});
+app.get('/fonts/glyphicons-halflings-regular.ttf', function(req, res){
+	console.log("image");
+  res.sendfile('./fonts/glyphicons-halflings-regular.ttf');
+});
+app.get('/fonts/glyphicons-halflings-regular.woff', function(req, res){
+	console.log("image");
+  res.sendfile('./fonts/glyphicons-halflings-regular.woff');
+});console.log('End of Server nodejs DroneApp');
