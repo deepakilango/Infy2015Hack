@@ -1,0 +1,2 @@
+open ftp://192.168.42.1
+mirror -v --only-newer /internal_000/Bebop_Drone/media/ ./images

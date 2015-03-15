@@ -44,4 +44,33 @@ app.get('/socket.io.js', function(req, res){
   res.sendfile(__dirname + '/socket.io.js');
 });
 
+app.get('/img/BebopDrone.jpg', function(req, res){
+	console.log("image");
+  res.sendfile('./img/BebopDrone.jpg');
+});
+
+app.get('/css/bootstrap.min.css', function(req, res){
+	console.log("image");
+  res.sendfile(__dirname + '/css/bootstrap.min.css');
+});
+
+app.get('/css/style.css', function(req, res){
+	console.log("image");
+  res.sendfile(__dirname + '/css/style.css');
+});
+
+app.get('/js/jquery.min.js', function(req, res){
+	console.log("image");
+  res.sendfile(__dirname + '/js/jquery.min.js');
+});
+app.get('/js/bootstrap.min.js', function(req, res){
+	console.log("image");
+  res.sendfile('./js/bootstrap.min.js');
+});
+app.get('/js/scripts.js', function(req, res){
+	console.log("image");
+  res.sendfile('./js/scripts.js');
+});
+
+
 console.log('End of Server nodejs DroneApp');
