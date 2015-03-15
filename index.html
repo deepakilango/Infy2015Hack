@@ -38,13 +38,16 @@
 	<script type="text/javascript" src="js/scripts.js"></script>
  <script>
 
+var 
+
 	  var socket = io.connect('http://localhost');
 	  socket.on('conStatus', function (data) {
 	        console.log(data);
 	  });
 
 	  socket.on('DroneStatus', function (data) {
-	        console.log(data);
+	   $('#logMessage').append('<p>' + data + '</p>');
+	        //console.log(data);
 	  });
 
 	function flyme(){
@@ -52,38 +55,21 @@
 		socket.emit('triggerCPPDroneApp', 'testData');
         }
 
-if (typeof console != "undefined")
-    if (typeof console.log != 'undefined')
-        console.olog = console.log;
-    else
-        console.olog = function() {};
-
-console.log = function(message) {
-    console.olog(message);
-
-
-    //var temp = "DroneIT::xyz \nDroneIT::testing \ncommand connected\nbebopconnected\nDroneIT::testing2\nDroneIT::Picture taken\nDroneIT::Picture taken going"
-    var splitResponse = message.split("\n");
-    $.each(splitResponse, function(i) {
-        if (splitResponse[i].search("DroneIT") != -1) {
-            alert("Is available" + splitResponse[i].substr(splitResponse[i].indexOf("::") + 1))
-            var droneResponse = splitResponse[i].substr(splitResponse[i].indexOf("::") + 1)
-            var droneResponseLen = droneResponse.length;
-            if (droneResponse != -1 && droneResponseLen == 14) {
-                alert("picture taken" + splitResponse[i].substr(splitResponse[i].indexOf("::") + 1))
-                    //triggerShellScript();
-            }
+	function PushFlightPlan1(){
+  		console.log('Send Flight Plan 1');
+		socket.emit('triggerFlightPlan1', 'N|TAKEOFF-|\nN|WAIT----|005\nN|LAND----|');
         }
-    });
+
+i
+    //var temp = "DroneIT::xyz \nDroneIT::testing \ncommand connected\nbebopconnected\nDroneIT::testing2\nDroneIT::Picture taken\nDroneIT::Picture taken going"
+  
     if (message.search("Connected") != -1) {
         $('#logMessage').append('<p>' + message + '</p>');
     }
 };
 console.error = console.debug = console.info = console.log
 
-function triggerShellScript() {
-    alert("shell trigger script")
-}
+
    </script>
 </head>
 
@@ -147,6 +133,7 @@ function triggerShellScript() {
 					
 				<p>
 					<a <a href="javascript:flyme()" class="btn btn-lg btn-success"><span class="glyphicon glyphicon-plane"></span> Fly me</a>
+<a <a href="javascript:PushFlightPlan1()" class="btn btn-lg btn-success"><span class="glyphicon glyphicon-random"></span> Flight Plan1</a>
 
 				</p>
 			</div> 

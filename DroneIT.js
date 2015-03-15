@@ -2,7 +2,9 @@
 
 var app  = require('express')()
    , server = require('http').createServer(app)
-   , io = require('socket.io').listen(server);
+   , io = require('socket.io').listen(server)
+   ,client =require("redis").createClient()
+   , $ = require('jquery');
 var spawn = require('child_process').spawn;
 
 /* reduce debug messages to level 1 */
@@ -23,15 +25,54 @@ io.sockets.on('connection', function (socket) {
 
       child.stdout.on('data', function(chunk) {
 	  console.log('Data from CPP');
-          socket.emit('DroneStatus', chunk.toString('ascii'));
+          //socket.emit('DroneStatus', chunk.toString('ascii'));
+	 var message = chunk.toString('ascii');
+	 var splitResponse = message.split("\n");
+    	$.each(splitResponse, function(i) {
+        if (splitResponse[i].search("DroneIT") != -1) {
+            //alert("Is available" + splitResponse[i].substr(splitResponse[i].indexOf("::") + 1))
+            var droneResponse = splitResponse[i].substr(splitResponse[i].indexOf("::") + 1)
+            var droneResponseLen = droneResponse.length;
+            if (droneResponse != -1 && droneResponseLen == 14) {
+                //alert("picture taken" + splitResponse[i].substr(splitResponse[i].indexOf("::") + 1))
+                    //triggerShellScript();
+	    console.log("call OCR Script");
+            }
+	  socket.emit('DroneStatus', droneResponse);
+        }
+    });
       });
 
       child.on('exit', function(code) {
 	console.log('exit Cpp Program');
       });
   });
+
+  socket.on('triggerFlightPlan1', function (data) {
+      console.log("Fly Flight Plan 1");
+
+
+ var splitFlightPlan1 = data.split("\n");
+    $.each(splitFlightPlan1, function(i) {
+          client.rpush('NavCommands', [splitFlightPlan1[i]]);
+         });
+    //});
+
+      var child = spawn('./Build/DroneIT', '');
+
+      child.stdout.on('data', function(chunk) {
+	  console.log('Data from CPP');
+          
+      });
+
+      child.on('exit', function(code) {
+	console.log('exit Cpp Program');
+      });
+  });
+
   
 });
+
 
 /* http portion of the server */
 app.get('/', function (req, res) {
