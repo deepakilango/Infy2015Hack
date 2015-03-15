@@ -18,7 +18,8 @@ io.sockets.on('connection', function(socket) {
 
     socket.emit('conStatus', 'Connected Message');
 
-    socket.on('triggerCPPDroneApp', function(data) {
+    socket.on('clearCommands', function(data) {
+	console.log("Cleared the NavCommands");
 	client.del('NavCommands');
     });
     socket.on('triggerCPPDroneApp', function(data) {
@@ -178,10 +179,13 @@ app.get('/css/style.css', function(req, res){
   res.sendfile(__dirname + '/css/style.css');
 });
 
-app.get('/js/jquery.min.js', function(req, res){
+
+app.get('/js/jquery-1.11.2.min.js', function(req, res){
 	console.log("image");
-  res.sendfile(__dirname + '/js/jquery.min.js');
+  res.sendfile(__dirname + '/js/jquery-1.11.2.min.js');
 });
+
+
 app.get('/js/bootstrap.min.js', function(req, res){
 	console.log("image");
   res.sendfile('./js/bootstrap.min.js');
