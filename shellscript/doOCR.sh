@@ -6,6 +6,7 @@ infile="$1"
 outfile="$2"
 outtxtfile="$3"
 fuzz=30
+dilate=5
 
 # test that infile provided
 [ "$infile" = "" ] && echo "NO INPUT FILE SPECIFIED"
@@ -19,9 +20,17 @@ fi
 
 if [ "$4" = "" ]
     then
-   fuzz=5 
+   fuzz=5
+   else 
+   fuzz="$4" 
 fi
 
+if [ "$5" = "" ]
+    then
+   dilate=3 
+   else
+   dilate="$5"
+fi
 tmpF1="./shellscript/tmp/Tmp_$$-_1_FillBlack.jpg"
 tmpF2="./shellscript/tmp/Tmp_$$-_2_dilate.jpg"
 tmpF3="./shellscript/tmp/Tmp_$$-_3_erode.jpg"
@@ -41,7 +50,7 @@ cropped="./shellscript/tmp/Tmp_$$-_0_cropped.jpg"
 #cat $1 > $cropped
 convert $1 -crop 1920x1088+1088+1984 $cropped
 convert $cropped -fill black -fuzz $fuzz% +opaque "#ffffff" $tmpF1
-convert $tmpF1 -morphology Dilate:3 Octagon $tmpF2
+convert $tmpF1 -morphology Dilate:$dilate Octagon $tmpF2
 convert $tmpF2 -morphology erode:20 diamond -clip-mask $tmpF1 $tmpF3
 convert $tmpF3 -negate $cropped -compose plus -composite $tmpF4
 convert $tmpF4 -threshold 40% $tmpF5
