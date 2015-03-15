@@ -66,5 +66,5 @@ tesseract $tmpFb $tmpTess
 cat $tmpTesstxt >> $tmpTess2
 cat $tmpTess2 > $outtxtfile
 awk 'NF' $tmpTess2 | awk  '{print "DroneIT::" $0}'
-rm $tmpF1 $tmpF2 $tmpF3 $tmpF4 $tmpF5 $tmpF6 $tmpF7 $tmpF8 $tmpF9 $tmpTesstxt
+rm $tmpF1 $tmpF2 $tmpF3 $tmpF4 $tmpF5 $tmpF6 $tmpF7 $tmpF8 $tmpF9 $tmpTesstxt $cropped
 exit 0
