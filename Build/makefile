@@ -44,7 +44,7 @@ all: DroneIT
 DroneIT: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -L../ThirdPartyLibs/ArDroneSDK3/lib -o "DroneIT" $(OBJS) $(USER_OBJS) $(LIBS) -lncurses -lpthread
+	g++ -L../ThirdPartyLibs/ArDroneSDK3/lib -o "DroneIT" $(OBJS) $(USER_OBJS) $(LIBS) $(pkg-config --cflags --libs redis3m) -lncurses -lpthread -lboost_system -lredis3m
 	@echo 'Finished building target: $@'
 	@echo ' '
 

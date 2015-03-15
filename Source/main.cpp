@@ -6,9 +6,23 @@
 #include <string.h>
 #include <ncurses.h>
 #include <unistd.h>
+#include <iostream>
+#include "redis3m/redis3m.hpp"
 
 // Namespaces
 using namespace rebop;
+using namespace redis3m;
+using namespace std;
+
+#define TAKE_OFF "TAKEOFF-"
+#define WAIT "WAIT----"
+#define FORWARD "FORWARD-"
+#define BACKWARD "BACKWARD"
+#define TAKEPIC "TAKEPIC-"
+#define TURNRIGHT "TURNRIGH"
+#define LAND "LAND----"
+#define TURNLEFT "TURNLEFT"
+
 
 void runOnKeyStrokes(CBebopInterface bebop){
 	int indexCtr = 0;
@@ -164,7 +178,7 @@ void runOnKeyStrokes(CBebopInterface bebop){
             } 
             else if(key == 'm')
             {		
-		bebop.setCameraAngle(0, 45);
+		bebop.initializePictureSettings();
             }
 	    else if(key == 'r')
             {		
@@ -182,6 +196,13 @@ void runOnKeyStrokes(CBebopInterface bebop){
 	endwin();
 }
 
+void sleepPreDetermined() {
+	usleep(60000);
+	usleep(60000);
+	usleep(60000);
+	usleep(60000);
+	usleep(60000);
+}
 
 void runAutoMode(CBebopInterface bebop) {
 	TPilotCommand commandIn;  
@@ -189,59 +210,22 @@ void runAutoMode(CBebopInterface bebop) {
 	std::cout << "DroneIT:: Drone taking off...";
 	// Take off
 	bebop.Takeoff();
-
-	// Move forward and increase height
-	//sleep(1);
-	/*std::cout << "HEIGHT UP";
-	commandIn.flag = 1;
-	commandIn.roll = 0;
-	commandIn.pitch = 15;
-	commandIn.yaw = 0;
-	commandIn.gaz = 15;
-	commandIn.psi = 0;
-	bebop.SendPilotCommand(commandIn);
-	*/
-	// wait for a second
-	sleep(1);
+	sleep(3);
+	sleepPreDetermined();
 
 	//Set camera angle
-	bebop.setCameraAngle(0,-100);
-	//sleep(1);
-	//Take picture
-	//bebop.takePicture(0);
+	bebop.setCameraAngle(0,-90);
+	sleepPreDetermined();
 
 	// Move forward 
-	sleep(1);
-	for(int i=0;i<10;i++) {
-		usleep(60000);
-		usleep(60000);
-		usleep(60000);
-		std::cout << "DroneIT:: Move forward";
-		if(i%5) {
-		   sleep(1);
+	for(int i=0;i<11;i++) {
+		if(i%3) {
 		   //Take picture
 		   bebop.takePicture(0);
-		   sleep(1);
+		   sleepPreDetermined();
 		}
-		usleep(60000);
-		usleep(60000);
-		commandIn.flag = 1;
-		commandIn.roll = 0;
-		commandIn.pitch = 30;
-		commandIn.yaw = 0;
-		commandIn.gaz = 0;
-		commandIn.psi = 0;
-		bebop.SendPilotCommand(commandIn);
-	}
-	sleep(1);
-	//Take picture
-	bebop.takePicture(0);
-/*
-	// Move forward 
-	sleep(1);
-	for(int i=0;i<10;i++) {
-		sleep(1);
-		std::cout << "Move forward";
+
+		std::cout << "DroneIT:: Move forward";
 		commandIn.flag = 1;
 		commandIn.roll = 0;
 		commandIn.pitch = 15;
@@ -249,11 +233,145 @@ void runAutoMode(CBebopInterface bebop) {
 		commandIn.gaz = 0;
 		commandIn.psi = 0;
 		bebop.SendPilotCommand(commandIn);
-	}*/
+		sleepPreDetermined();
+	}
+	//Take picture
+	bebop.takePicture(0);
+	sleepPreDetermined();
+
 	//Land
-	sleep(1);
 	std::cout << "DroneIT:: Drone Landing...";
 	bebop.Land();
+	sleepPreDetermined();
+}
+
+int executeCommand(CBebopInterface bebop, std::string command) {
+    TPilotCommand commandIn;  
+    int commandLength = command.length();
+    std::string trimmedCommand;
+    std::string additionalParam;
+    int measures=0;
+    if(commandLength>=10) {
+        trimmedCommand = command.substr(2,8);
+    	cout <<"DroneIT:: Trimmed Command: "<<trimmedCommand<<endl;
+	if(commandLength>=14) {
+            additionalParam = command.substr(11,3);
+       	    cout <<"DroneIT:: Additional param: "<<additionalParam<<endl;
+	    measures = atoi (additionalParam.c_str());
+       	    cout <<"DroneIT:: Measures: "<<measures<<endl;
+	}
+    }
+    if(trimmedCommand == TAKE_OFF) {
+	// Take off
+	bebop.Takeoff();
+	sleepPreDetermined();
+	cout << "DroneIT:: Success - Take OFF" << endl;
+    }
+    else if(trimmedCommand == WAIT) {
+	cout << "DroneIT:: Wait (sleep) for "<< measures << " seconds..."  << endl;
+	sleep(measures);
+    }
+    else if(trimmedCommand == FORWARD) {
+	cout << "DroneIT:: Moving forward " << measures << " steps... " << endl;
+	for(int i=0;i<measures;i++) {
+		commandIn.flag = 1;
+		commandIn.roll = 0;
+		commandIn.pitch = 15;
+		commandIn.yaw = 0;
+		commandIn.gaz = 0;
+		commandIn.psi = 0;
+		bebop.SendPilotCommand(commandIn);
+		sleepPreDetermined();
+	}
+    }
+    else if(trimmedCommand == BACKWARD) {
+	cout << "DroneIT:: Moving backward " << measures << " steps... " << endl;
+	for(int i=0;i<measures;i++) {
+		commandIn.flag = 1;
+		commandIn.roll = 0;
+		commandIn.pitch = -15;
+		commandIn.yaw = 0;
+		commandIn.gaz = 0;
+		commandIn.psi = 0;
+		bebop.SendPilotCommand(commandIn);
+		sleepPreDetermined();
+	}
+    }
+    else if(trimmedCommand == TAKEPIC) {
+	cout << "DroneIT:: Taking picture" << endl;
+	bebop.takePicture(0);
+	sleepPreDetermined();
+    }
+    else if(trimmedCommand == TURNRIGHT) {
+	cout << "DroneIT:: Success - Moving right " << measures << " steps..." << endl;
+	for(int i=0;i<measures;i++) {
+		commandIn.flag = 0;
+		commandIn.roll = 0;
+		commandIn.pitch = 0;
+		commandIn.yaw = -15;
+		commandIn.gaz = 0;
+		commandIn.psi = 0;
+		bebop.SendPilotCommand(commandIn);
+		sleepPreDetermined();
+	}
+    }
+    else if(trimmedCommand == TURNLEFT) {
+	cout << "DroneIT:: Success - Moving left " << measures << " steps..." << endl;
+	for(int i=0;i<measures;i++) {
+		commandIn.flag = 0;
+		commandIn.roll = 0;
+		commandIn.pitch = 0;
+		commandIn.yaw = 15;
+		commandIn.gaz = 0;
+		commandIn.psi = 0;
+		bebop.SendPilotCommand(commandIn);
+		sleepPreDetermined();
+	}
+    }
+    else if(trimmedCommand == LAND) {
+	bebop.Land();
+	sleepPreDetermined();
+	cout << "DroneIT:: Success - LAND" << endl;
+    }
+    else {
+	cout << "DroneIT:: Command not recognized... :( " << endl;
+	return -1;
+    }
+    return 1;
+}
+
+
+void runUIMode(CBebopInterface bebop) {
+	std::cout << "DroneIT:: Running from UI mode...";
+	connection::ptr_t conn = connection::create();
+	reply r = conn->run(command("RPOP") << "NavCommands" );
+	std::string tempString;
+	while(true) {
+            if(r.str().size() > 0) {
+		std::cout << "DroneIT:: Command received " << r.str() << endl;
+		}
+	    if(r.str().size() <= 0) {
+                //std::cout << "DroneIT:: Invaid Command " << r.str() << endl;
+	    }
+	    else if(r.str().at(0) == 'Q') {
+                std::cout << "DroneIT:: Terminating... " << r.str() << endl;
+		// Land
+		bebop.Land();
+		break;
+	    }
+	    else if(r.str().at(0) == 'O') {
+                std::cout << "DroneIT:: Override received... " << r.str() << endl;
+		executeCommand(bebop, r.str());
+	    }
+	    else if(r.str().at(0) == 'R') {
+                std::cout << "DroneIT:: Resume from regular queue... " << r.str() << endl;
+		executeCommand(bebop, r.str());
+	    }
+	    else {
+	    	executeCommand(bebop, r.str());
+	    }
+	    r = conn->run(command("RPOP") << "NavCommands" );
+	}
 }
 
 int main()
@@ -272,11 +390,12 @@ int main()
 	{
 		LOG( ERROR ) << "DroneIT:: Ready to do stuff!";
 		//bebop.FlatTrim();
-		runAutoMode(bebop);		
-
-		runOnKeyStrokes(bebop);
+		//runAutoMode(bebop);		
+		  runUIMode(bebop);
+		//runOnKeyStrokes(bebop);
 	}
 	// Cleanup - Kill the network and clean up memory
+
 	bebop.Cleanup();
 	endwin();
 /*
