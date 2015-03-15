@@ -14,12 +14,18 @@
 	
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/style.css" rel="stylesheet">
-<style>.carousel-inner > .item > img{ width:1000px; height:200px; }</style>
+
+</style>
+<style>
+.carousel-inner > .item > img{ width:1500px; height:300px; }
+</style>
   <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
   <!--[if lt IE 9]>
     <script src="js/html5shiv.js"></script>
   <![endif]-->
+<script>
 
+</script>
   <!-- Fav and touch icons -->
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144-precomposed.png">
   <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114-precomposed.png">
@@ -45,6 +51,39 @@
   		console.log('Send trigger CPP Drone command');
 		socket.emit('triggerCPPDroneApp', 'testData');
         }
+
+if (typeof console != "undefined")
+    if (typeof console.log != 'undefined')
+        console.olog = console.log;
+    else
+        console.olog = function() {};
+
+console.log = function(message) {
+    console.olog(message);
+
+
+    //var temp = "DroneIT::xyz \nDroneIT::testing \ncommand connected\nbebopconnected\nDroneIT::testing2\nDroneIT::Picture taken\nDroneIT::Picture taken going"
+    var splitResponse = message.split("\n");
+    $.each(splitResponse, function(i) {
+        if (splitResponse[i].search("DroneIT") != -1) {
+            alert("Is available" + splitResponse[i].substr(splitResponse[i].indexOf("::") + 1))
+            var droneResponse = splitResponse[i].substr(splitResponse[i].indexOf("::") + 1)
+            var droneResponseLen = droneResponse.length;
+            if (droneResponse != -1 && droneResponseLen == 14) {
+                alert("picture taken" + splitResponse[i].substr(splitResponse[i].indexOf("::") + 1))
+                    //triggerShellScript();
+            }
+        }
+    });
+    if (message.search("Connected") != -1) {
+        $('#logMessage').append('<p>' + message + '</p>');
+    }
+};
+console.error = console.debug = console.info = console.log
+
+function triggerShellScript() {
+    alert("shell trigger script")
+}
    </script>
 </head>
 
@@ -63,10 +102,34 @@
 				</ol>
 				<div class="carousel-inner">
 					<div class="item active">
-						<img alt="" src="/img/BebopDrone.jpg">
+						<img alt="" src="/img/Intermodal2.jpg">
 						<div class="carousel-caption">
 							<h4>
-								DroneIT
+								
+							</h4>
+							<p>
+								
+							</p>
+						</div>
+					</div>
+
+<div class="item">
+						<img alt="" src="/img/IntermodalTerminal3.png">
+						<div class="carousel-caption">
+							<h4>
+							
+							</h4>
+							<p>
+								
+							</p>
+						</div>
+					</div>
+
+<div class="item">
+						<img alt="" src="/img/Intermodal4.jpg">
+						<div class="carousel-caption">
+							<h4>
+							
 							</h4>
 							<p>
 								
@@ -87,6 +150,7 @@
 
 				</p>
 			</div> 
+<div id ="logMessage"> </div>
 			
 		</div>
 	</div>
