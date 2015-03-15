@@ -9,7 +9,7 @@ fuzz=30
 
 # test that infile provided
 [ "$infile" = "" ] && echo "NO INPUT FILE SPECIFIED"
-if [ "$infile" = "./images/.jpg" ] 
+if [ "$infile" = "./shellscript/images/.jpg" ] 
    then
 	exit 0
 fi
@@ -22,21 +22,21 @@ if [ "$4" = "" ]
    fuzz=5 
 fi
 
-tmpF1="./tmp/Tmp_$$-_1_FillBlack.jpg"
-tmpF2="./tmp/Tmp_$$-_2_dilate.jpg"
-tmpF3="./tmp/Tmp_$$-_3_erode.jpg"
-tmpF4="./tmp/Tmp_$$-_4_composite.jpg"
-tmpF5="./tmp/Tmp_$$-_5_threshold.jpg"
-tmpF6="./tmp/Tmp_$$-_6_trim.jpg"
-tmpF7="./tmp/Tmp_$$-_7_dilate.jpg"
-tmpF8="./tmp/Tmp_$$-_8_negate.jpg"
-tmpF9="./tmp/Tmp_$$-_9_trim.jpg"
-tmpFa="./tmp/Tmp_$$-_a_rotatm10.jpg"
-tmpFb="./tmp/Tmp_$$-_b_rotatp10.jpg"
-tmpTess="./tmp/Tmp_$$-_Tess_Out"
-tmpTesstxt="./tmp/Tmp_$$-_Tess_Out.txt"
-tmpTess2="./tmp/Tmp_$$-_Tess_Out2.txt"
-cropped="./tmp/Tmp_$$-_0_cropped.jpg"
+tmpF1="./shellscript/tmp/Tmp_$$-_1_FillBlack.jpg"
+tmpF2="./shellscript/tmp/Tmp_$$-_2_dilate.jpg"
+tmpF3="./shellscript/tmp/Tmp_$$-_3_erode.jpg"
+tmpF4="./shellscript/tmp/Tmp_$$-_4_composite.jpg"
+tmpF5="./shellscript/tmp/Tmp_$$-_5_threshold.jpg"
+tmpF6="./shellscript/tmp/Tmp_$$-_6_trim.jpg"
+tmpF7="./shellscript/tmp/Tmp_$$-_7_dilate.jpg"
+tmpF8="./shellscript/tmp/Tmp_$$-_8_negate.jpg"
+tmpF9="./shellscript/tmp/Tmp_$$-_9_trim.jpg"
+tmpFa="./shellscript/tmp/Tmp_$$-_a_rotatm10.jpg"
+tmpFb="./shellscript/tmp/Tmp_$$-_b_rotatp10.jpg"
+tmpTess="./shellscript/tmp/Tmp_$$-_Tess_Out"
+tmpTesstxt="./shellscript/tmp/Tmp_$$-_Tess_Out.txt"
+tmpTess2="./shellscript/tmp/Tmp_$$-_Tess_Out2.txt"
+cropped="./shellscript/tmp/Tmp_$$-_0_cropped.jpg"
 
 #cat $1 > $cropped
 convert $1 -crop 1920x1088+1088+1984 $cropped
@@ -66,5 +66,5 @@ tesseract $tmpFb $tmpTess
 cat $tmpTesstxt >> $tmpTess2
 cat $tmpTess2 > $outtxtfile
 awk 'NF' $tmpTess2 | awk  '{print "DroneIT::" $0}'
-rm $tmpF1 $tmpF2 $tmpF3 $tmpF4 $tmpF5 $tmpF6 $tmpF7 $tmpF8 $tmpF9 $tmpTesstxt $cropped
+#rm $tmpF1 $tmpF2 $tmpF3 $tmpF4 $tmpF5 $tmpF6 $tmpF7 $tmpF8 $tmpF9 $tmpTesstxt $cropped
 exit 0

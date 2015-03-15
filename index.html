@@ -14,7 +14,8 @@
 	
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/style.css" rel="stylesheet">
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
 </style>
 <style>
 .carousel-inner > .item > img{ width:1500px; height:300px; }
@@ -25,6 +26,56 @@
   <![endif]-->
 <script>
 
+$(document).keydown(function(e) {
+//alert(e.which)
+    switch(e.which) {
+
+	case 27: // left
+	//alert('left')
+	socket.emit('overrideCommands', 'Q|');
+        break;
+
+        case 37: // left
+	//alert('left')
+	socket.emit('overrideCommands', 'O|TURNRIGH|001');
+        break;
+        case 38: // up
+	socket.emit('overrideCommands', 'O|FORWARD-|001');
+        break;
+
+        case 39: // right
+	socket.emit('overrideCommands', 'O|TURNRIGH|001');
+        break;
+
+        case 40: // down
+	socket.emit('overrideCommands', 'O|BACKWARD|001');
+        break;
+	
+	case 67: // C - delete the commands
+	socket.emit('clearCommands', 'clear');
+        break;
+
+	case 76: // L - Land
+	socket.emit('overrideCommands', 'O|LAND----|');
+        break;
+	
+	case 80: // P - Picture
+	socket.emit('overrideCommands', 'O|TAKEPIC-|');
+        break;
+
+	case 81: // Q - Quit
+	socket.emit('overrideCommands', 'Q|');
+        break;
+	
+	case 84: // L - Take Off
+	socket.emit('overrideCommands', 'O|TAKEOFF-|');
+        break;
+
+
+        default: return; // exit this handler for other keys
+    }
+    e.preventDefault(); // prevent the default action (scroll / move caret)
+});
 </script>
   <!-- Fav and touch icons -->
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144-precomposed.png">
@@ -59,6 +110,12 @@
   		console.log('Send Flight Plan 1');
 		socket.emit('triggerFlightPlan1', 'N|TAKEOFF-|\nN|WAIT----|005\nN|LAND----|');
         }
+
+	function PushFlightPlan2(){
+  		console.log('Send Flight Plan 2');
+		socket.emit('triggerFlightPlan2', 'N|TAKEOFF-|\nN|WAIT----|003\nN|TAKEPIC-|\nN|FORWARD-|010\nN|LAND----|\nQ');
+        }
+
 
 
     //var temp = "DroneIT::xyz \nDroneIT::testing \ncommand connected\nbebopconnected\nDroneIT::testing2\nDroneIT::Picture taken\nDroneIT::Picture taken going"
@@ -129,6 +186,8 @@
 				<p>
 					<a <a href="javascript:flyme()" class="btn btn-lg btn-success"><span class="glyphicon glyphicon-plane"></span> Fly me</a>
 <a <a href="javascript:PushFlightPlan1()" class="btn btn-lg btn-success"><span class="glyphicon glyphicon-random"></span> Flight Plan1</a>
+
+<a <a href="javascript:PushFlightPlan2()" class="btn btn-lg btn-success"><span class="glyphicon glyphicon-random"></span> Flight Plan2</a>
 
 				</p>
 			</div> 

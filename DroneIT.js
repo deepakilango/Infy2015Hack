@@ -14,87 +14,127 @@ io.set('log level', 1);
 server.listen(80);
 
 /* sockets.io setup */
-io.sockets.on('connection', function (socket) {
-  
-  socket.emit('conStatus', 'Connected Message');
-  
-  socket.on('triggerCPPDroneApp', function (data) {
-      console.log("Fly Drone App");
+io.sockets.on('connection', function(socket) {
 
-      var child = spawn('./Build/DroneIT', '');
+    socket.emit('conStatus', 'Connected Message');
 
-      child.stdout.on('data', function(chunk) {
-	  console.log('Data from CPP');
-          //socket.emit('DroneStatus', chunk.toString('ascii'));
-	 var message = chunk.toString('ascii');
-	 var splitResponse = message.split("\n");
-    	//$.each(splitResponse, function(i) {
-	 for (var i =0; i<splitResponse.length; i++) {
-        	if (splitResponse[i].search("DroneIT") != -1) {
-            		//alert("Is available" + splitResponse[i].substr(splitResponse[i].indexOf("::") + 1))
-            		var droneResponse = splitResponse[i].substr(splitResponse[i].indexOf("::") + 1);
-            		var droneResponseLen = droneResponse.length;
-            			if (droneResponse != -1 && droneResponseLen == 14) {
-                			//alert("picture taken" + splitResponse[i].substr(splitResponse[i].indexOf("::") + 1))
-                    			//triggerShellScript();
-	    				console.log("call OCR Script");
-            			}
-	  		socket.emit('DroneStatus', droneResponse);
-        	}
-    //});
-  }
-     
- });
+    socket.on('triggerCPPDroneApp', function(data) {
+	client.del('NavCommands');
+    });
+    socket.on('triggerCPPDroneApp', function(data) {
+        console.log("Fly Drone App");
 
-      child.on('exit', function(code) {
-	console.log('exit Cpp Program');
-      });
-  });
+        var child = spawn('./Build/DroneIT', '');
 
-  socket.on('triggerFlightPlan1', function (data) {
-      console.log("Fly Flight Plan 1");
+        child.stdout.on('data', function(chunk) {
+            console.log('Data from CPP');
+            var message = chunk.toString('ascii');
+            var splitResponse = message.split("\n");
+            for (var i = 0; i < splitResponse.length; i++) {
+                if (splitResponse[i].search("DroneIT") != -1) {
+                    var droneResponse = splitResponse[i].substr(splitResponse[i].indexOf("::") + 1);
+                    var droneResponseLen = droneResponse.length;
+                    if (droneResponse != -1 && droneResponseLen == 14) {
+                        console.log("call OCR Script");
+                    }
+                    socket.emit('DroneStatus', droneResponse);
+                }
+            }
 
+        });
 
- var splitFlightPlan1 = data.split("\n");
-    //$.each(splitFlightPlan1, function(i) {
-	 for (var i =0; i<splitFlightPlan1.length; i++) {
-          client.rpush('NavCommands', splitFlightPlan1[i]);
-	}
-        // });
-    //});
-
-      var child = spawn('./Build/DroneIT', '');
-
-          child.stdout.on('data', function(chunk) {
-	  console.log('Data from CPP');
-          //socket.emit('DroneStatus', chunk.toString('ascii'));
-	 var message = chunk.toString('ascii');
-	 var splitResponse = message.split("\n");
-    	//$.each(splitResponse, function(i) {
-	 for (var i =0; i<splitResponse.length; i++) {
-        if (splitResponse[i].search("DroneIT") != -1) {
-            //alert("Is available" + splitResponse[i].substr(splitResponse[i].indexOf("::") + 1))
-            var droneResponse = splitResponse[i].substr(splitResponse[i].indexOf("::") + 1)
-            var droneResponseLen = droneResponse.length;
-		    if (droneResponse != -1 && droneResponseLen == 14) {
-		        //alert("picture taken" + splitResponse[i].substr(splitResponse[i].indexOf("::") + 1))
-		            //triggerShellScript();
-		    	console.log("call OCR Script");
-		    }
-	  socket.emit('DroneStatus', droneResponse);
-	}
-        //});
-	}
+        child.on('exit', function(code) {
+            console.log('exit Cpp Program');
+        });
     });
 
-      child.on('exit', function(code) {
-	console.log('exit Cpp Program');
-      });
-  });
+    socket.on('triggerFlightPlan1', function(data) {
+        console.log("Fly Flight Plan 1");
 
-  
+
+        var splitFlightPlan1 = data.split("\n");
+        for (var i = 0; i < splitFlightPlan1.length; i++) {
+            client.lpush('NavCommands', splitFlightPlan1[i]);
+        }
+
+        var child = spawn('./Build/DroneIT', '');
+
+        child.stdout.on('data', function(chunk) {
+            console.log('Data from CPP');
+            //socket.emit('DroneStatus', chunk.toString('ascii'));
+            var message = chunk.toString('ascii');
+            var splitResponse = message.split("\n");
+            for (var i = 0; i < splitResponse.length; i++) {
+                if (splitResponse[i].search("DroneIT") != -1) {
+                    var droneResponse = splitResponse[i].substr(splitResponse[i].indexOf("::") + 1)
+                    var droneResponseLen = droneResponse.length;
+                    if (droneResponse != -1 && droneResponseLen == 14) {
+                       
+			var child2 = spawn('./shellscript/doPull.sh', '');
+			child2.stdout.on('data', function(chunk) {
+			    console.log('Data from OCR');
+			    //socket.emit('DroneStatus', chunk.toString('ascii'));
+			    var message2 = chunk.toString('ascii');
+			    var splitResponse2 = message2.split("\n");
+			    for (var i = 0; i < splitResponse2.length; i++) {
+				if (splitResponse2[i].search("DroneIT") != -1) {
+				    var droneResponse2 = splitResponse2[i].substr(splitResponse2[i].indexOf("::") + 1)
+				    socket.emit('DroneStatus', droneResponse2);
+				}
+			    }
+			});
+
+			child2.on('exit', function(code) {
+			    console.log('exit OCR program');
+			});
+
+		 console.log("call OCR Script");
+                    }
+                    socket.emit('DroneStatus', droneResponse);
+                }
+            }
+        });
+
+        child.on('exit', function(code) {
+            console.log('exit Cpp Program');
+        });
+    });
+
+
+
+    socket.on('triggerFlightPlan2', function(data) {
+        console.log("Fly Flight Plan 2");
+	var child2 = spawn('./shellscript/doPull.sh', '');
+			child2.stdout.on('data', function(chunk) {
+			    console.log('Data from OCR');
+			    //socket.emit('DroneStatus', chunk.toString('ascii'));
+			    var message2 = chunk.toString('ascii');
+			    var splitResponse2 = message2.split("\n");
+			     console.log(splitResponse2)
+			    for (var i = 0; i < splitResponse2.length; i++) {
+				if (splitResponse2[i].search("DroneIT") != -1) {
+				    var droneResponse2 = splitResponse2[i].substr(splitResponse2[i].indexOf("::") + 1)
+				    socket.emit('DroneStatus', droneResponse2);
+				}
+			    }
+			});
+
+			child2.on('exit', function(code) {
+			    console.log('exit OCR program');
+			});
+
+    });
+
+
+
+
+
+    socket.on('overrideCommands', function(data) {
+        console.log("data" + data);
+        client.rpush('NavCommands', data);
+    });
 });
-
+ 
 
 /* http portion of the server */
 app.get('/', function (req, res) {
@@ -168,3 +208,7 @@ app.get('/fonts/glyphicons-halflings-regular.woff', function(req, res){
 	console.log("image");
   res.sendfile('./fonts/glyphicons-halflings-regular.woff');
 });console.log('End of Server nodejs DroneApp');
+
+
+
+
