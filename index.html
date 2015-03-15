@@ -38,7 +38,7 @@
 	<script type="text/javascript" src="js/scripts.js"></script>
  <script>
 
-var 
+
 
 	  var socket = io.connect('http://localhost');
 	  socket.on('conStatus', function (data) {
@@ -60,15 +60,10 @@ var
 		socket.emit('triggerFlightPlan1', 'N|TAKEOFF-|\nN|WAIT----|005\nN|LAND----|');
         }
 
-i
+
     //var temp = "DroneIT::xyz \nDroneIT::testing \ncommand connected\nbebopconnected\nDroneIT::testing2\nDroneIT::Picture taken\nDroneIT::Picture taken going"
   
-    if (message.search("Connected") != -1) {
-        $('#logMessage').append('<p>' + message + '</p>');
-    }
-};
-console.error = console.debug = console.info = console.log
-
+  
 
    </script>
 </head>
