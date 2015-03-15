@@ -36,11 +36,14 @@ tmpFb="./tmp/Tmp_$$-_b_rotatp10.jpg"
 tmpTess="./tmp/Tmp_$$-_Tess_Out"
 tmpTesstxt="./tmp/Tmp_$$-_Tess_Out.txt"
 tmpTess2="./tmp/Tmp_$$-_Tess_Out2.txt"
+cropped="./tmp/Tmp_$$-_0_cropped.jpg"
 
-convert $1 -fill black -fuzz $fuzz% +opaque "#ffffff" $tmpF1
+#cat $1 > $cropped
+convert $1 -crop 1920x1088+1088+1984 $cropped
+convert $cropped -fill black -fuzz $fuzz% +opaque "#ffffff" $tmpF1
 convert $tmpF1 -morphology Dilate:3 Octagon $tmpF2
 convert $tmpF2 -morphology erode:20 diamond -clip-mask $tmpF1 $tmpF3
-convert $tmpF3 -negate $1 -compose plus -composite $tmpF4
+convert $tmpF3 -negate $cropped -compose plus -composite $tmpF4
 convert $tmpF4 -threshold 40% $tmpF5
 tesseract $tmpF4 $tmpTess
 #cat $tmpTesstxt
