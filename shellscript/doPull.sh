@@ -12,6 +12,7 @@ while read -r line; do
 	dotjpg=".jpg"
 	dottxt=".txt"
 	dotojpg="o.jgp"
+        onefile="1"
         dotslashimages="./shellscript/images/"
         dotslashoutimages="./shellscript/outimages/"
         imgName=$(echo ${line:19} | awk -F ".jpg" '{print $1}')
@@ -19,4 +20,5 @@ while read -r line; do
 	finalImageName=$dotslashimages$imgName$dotjpg
 	echo $finalImageName
 	./shellscript/doOCR.sh $finalImageName $dotslashoutimages$imgName$dotojpg $dotslashoutimages$imgName$dototxt 30
+        ./shellscript/doOCR.sh $finalImageName $dotslashoutimages$imgName$onefile$dotojpg $dotslashoutimages$imgName$onefile$dototxt 50 5
 done <<< "$output"	
