@@ -76,7 +76,8 @@ io.sockets.on('connection', function (socket) {
 	    console.log("call OCR Script");
             }
 	  socket.emit('DroneStatus', droneResponse);
-        }
+}
+        });
     });
 
       child.on('exit', function(code) {
