@@ -38,19 +38,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: BebopRebopAPI
+all: DroneIT
 
 # Tool invocations
-BebopRebopAPI: $(OBJS) $(USER_OBJS)
+DroneIT: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -L../ThirdPartyLibs/ArDroneSDK3/lib -o "BebopRebopAPI" $(OBJS) $(USER_OBJS) $(LIBS) -lncurses -lpthread
+	g++ -L../ThirdPartyLibs/ArDroneSDK3/lib -o "DroneIT" $(OBJS) $(USER_OBJS) $(LIBS) -lncurses -lpthread
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(OBJS)$(C++_DEPS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) BebopRebopAPI
+	-$(RM) $(OBJS)$(C++_DEPS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) DroneIT
 	-@echo ' '
 
 .PHONY: all clean dependents

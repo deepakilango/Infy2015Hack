@@ -26,7 +26,7 @@ void runOnKeyStrokes(CBebopInterface bebop){
             
             if ((key == 27) || (key =='q'))
             {
-		std::cout << "terminating...";
+		std::cout << "DroneIT:: terminating...";
 		std::cout << key;
 		//LOG( INFO ) << "Enter anything to land.";
 		//std::cin >> temp;
@@ -38,7 +38,7 @@ void runOnKeyStrokes(CBebopInterface bebop){
             }
             else if(key == 'a')
             {
-		std::cout << "LEFT";
+		std::cout << "DroneIT:: LEFT";
 		
 			commandIn.flag = 0;
 			commandIn.roll = 0;
@@ -50,19 +50,19 @@ void runOnKeyStrokes(CBebopInterface bebop){
             }
             else if(key == 'x')
             {
-		std::cout << "DOWN";
+		std::cout << "DroneIT:: DOWN";
 		// Land
 		bebop.Land();
             }
             else if(key == 'w')
             {
-		std::cout << "UP";
+		std::cout << "DroneIT:: UP";
 		// Take off
 		bebop.Takeoff();
             }
             else if(key == 'd')
             {
-		std::cout << "RIGHT";
+		std::cout << "DroneIT:: RIGHT";
 			commandIn.flag = 0;
 			commandIn.roll = 0;
 			commandIn.pitch = 0;
@@ -73,7 +73,7 @@ void runOnKeyStrokes(CBebopInterface bebop){
             }
             else if(key == 's')
             {
-		std::cout << "CENTER";
+		std::cout << "DroneIT:: CENTER";
 			commandIn.flag = 0;
 			commandIn.roll = 0;
 			commandIn.pitch = 0;
@@ -84,7 +84,7 @@ void runOnKeyStrokes(CBebopInterface bebop){
             }
             else if(key == 'u')
             {
-		std::cout << "PITCH UP";
+		std::cout << "DroneIT:: PITCH UP";
 			commandIn.flag = 1;
 			commandIn.roll = 0;
 			commandIn.pitch = 15;
@@ -95,7 +95,7 @@ void runOnKeyStrokes(CBebopInterface bebop){
             }
             else if(key == 'n')
             {
-		std::cout << "PITCH DOWN";
+		std::cout << "DroneIT:: PITCH DOWN";
 			commandIn.flag = 1;
 			commandIn.roll = 0;
 			commandIn.pitch = -15;
@@ -107,7 +107,7 @@ void runOnKeyStrokes(CBebopInterface bebop){
 
             else if(key == 't')
             {
-		std::cout << "HEIGHT UP";
+		std::cout << "DroneIT:: HEIGHT UP";
 			commandIn.flag = 1;
 			commandIn.roll = 0;
 			commandIn.pitch = 15;
@@ -118,7 +118,7 @@ void runOnKeyStrokes(CBebopInterface bebop){
             }
             else if(key == 'g')
             {
-		std::cout << "HEIGHT DOWN";
+		std::cout << "DroneIT:: HEIGHT DOWN";
 			commandIn.flag = 1;
 			commandIn.roll = 0;
 			commandIn.pitch = -15;
@@ -130,7 +130,7 @@ void runOnKeyStrokes(CBebopInterface bebop){
 
             else if(key == 'h')
             {
-		std::cout << "ROLL LEFT";
+		std::cout << "DroneIT:: ROLL LEFT";
 			commandIn.flag = 1;
 			commandIn.roll = 15;
 			commandIn.pitch = 0;
@@ -141,7 +141,7 @@ void runOnKeyStrokes(CBebopInterface bebop){
             }
             else if(key == 'j')
             {
-		std::cout << "ROLL RIGHT";
+		std::cout << "DroneIT:: ROLL RIGHT";
 			commandIn.flag = 1;
 			commandIn.roll = -15;
 			commandIn.pitch = 0;
@@ -156,15 +156,15 @@ void runOnKeyStrokes(CBebopInterface bebop){
             } 
             else if(key == 'o')
             {		
-		bebop.setCameraAngle(90);
+		bebop.setCameraAngle(0, 90);
             } 
             else if(key == 'i')
             {		
-		bebop.setCameraAngle(-90);
+		bebop.setCameraAngle(0, -90);
             } 
             else if(key == 'm')
             {		
-		bebop.setCameraAngle(45);
+		bebop.setCameraAngle(0, 45);
             }
 	    else if(key == 'r')
             {		
@@ -186,13 +186,13 @@ void runOnKeyStrokes(CBebopInterface bebop){
 void runAutoMode(CBebopInterface bebop) {
 	TPilotCommand commandIn;  
 
-	std::cout << "Drone taking off...";
+	std::cout << "DroneIT:: Drone taking off...";
 	// Take off
 	bebop.Takeoff();
 
 	// Move forward and increase height
-	sleep(2);
-/*	std::cout << "HEIGHT UP";
+	//sleep(1);
+	/*std::cout << "HEIGHT UP";
 	commandIn.flag = 1;
 	commandIn.roll = 0;
 	commandIn.pitch = 15;
@@ -200,22 +200,29 @@ void runAutoMode(CBebopInterface bebop) {
 	commandIn.gaz = 15;
 	commandIn.psi = 0;
 	bebop.SendPilotCommand(commandIn);
-*/
-	// wait for 5 seconds
+	*/
+	// wait for a second
 	sleep(1);
 
 	//Set camera angle
-	bebop.setCameraAngle(-100);
-	sleep(1);
+	bebop.setCameraAngle(0,-100);
+	//sleep(1);
 	//Take picture
-	bebop.takePicture(0);
+	//bebop.takePicture(0);
 
 	// Move forward 
 	sleep(1);
-	for(int i=0;i<40;i++) {
+	for(int i=0;i<10;i++) {
 		usleep(60000);
 		usleep(60000);
-		std::cout << "Move forward";
+		usleep(60000);
+		std::cout << "DroneIT:: Move forward";
+		if(i%5) {
+		   sleep(1);
+		   //Take picture
+		   bebop.takePicture(0);
+		   sleep(1);
+		}
 		usleep(60000);
 		usleep(60000);
 		commandIn.flag = 1;
@@ -226,7 +233,7 @@ void runAutoMode(CBebopInterface bebop) {
 		commandIn.psi = 0;
 		bebop.SendPilotCommand(commandIn);
 	}
-	sleep(2);
+	sleep(1);
 	//Take picture
 	bebop.takePicture(0);
 /*
@@ -244,8 +251,8 @@ void runAutoMode(CBebopInterface bebop) {
 		bebop.SendPilotCommand(commandIn);
 	}*/
 	//Land
-	sleep(2);
-	std::cout << "Drone Landing...";
+	sleep(1);
+	std::cout << "DroneIT:: Drone Landing...";
 	bebop.Land();
 }
 
@@ -259,13 +266,13 @@ int main()
 	// Connected and ready to do stuff, theoretically
 	if( bebop.IsConnected() == false )
 	{
-		LOG( ERROR ) << "No connection! Can't do anything!";
+		LOG( ERROR ) << "DroneIT:: No connection! Can't do anything!";
 	}
 	else
 	{
-		LOG( ERROR ) << "Ready to do stuff!";
+		LOG( ERROR ) << "DroneIT:: Ready to do stuff!";
 		//bebop.FlatTrim();
-		//runAutoMode(bebop);		
+		runAutoMode(bebop);		
 
 		runOnKeyStrokes(bebop);
 	}
