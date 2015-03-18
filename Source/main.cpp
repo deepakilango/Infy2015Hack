@@ -306,9 +306,9 @@ int executeCommand(CBebopInterface bebop, std::string command) {
 	cout << "DroneIT:: Success - Moving right " << measures << " steps..." << endl;
 	for(int i=0;i<measures;i++) {
 		commandIn.flag = 0;
-		commandIn.roll = 0;
+		commandIn.roll = -15;
 		commandIn.pitch = 0;
-		commandIn.yaw = -15;
+		commandIn.yaw = 0;
 		commandIn.gaz = 0;
 		commandIn.psi = 0;
 		bebop.SendPilotCommand(commandIn);
@@ -319,9 +319,9 @@ int executeCommand(CBebopInterface bebop, std::string command) {
 	cout << "DroneIT:: Success - Moving left " << measures << " steps..." << endl;
 	for(int i=0;i<measures;i++) {
 		commandIn.flag = 0;
-		commandIn.roll = 0;
+		commandIn.roll = 15;
 		commandIn.pitch = 0;
-		commandIn.yaw = 15;
+		commandIn.yaw = 0;
 		commandIn.gaz = 0;
 		commandIn.psi = 0;
 		bebop.SendPilotCommand(commandIn);

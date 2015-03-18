@@ -30,44 +30,52 @@ $(document).keydown(function(e) {
 //alert(e.which)
     switch(e.which) {
 
-	case 27: // left
-	//alert('left')
+	case 27: // Quit
+	console.log("Quit");
 	socket.emit('overrideCommands', 'Q|');
         break;
 
         case 37: // left
-	//alert('left')
-	socket.emit('overrideCommands', 'O|TURNRIGH|001');
+	console.log("left");
+	socket.emit('overrideCommands', 'O|TURNLEFT|001');
         break;
         case 38: // up
+        console.log("up");
 	socket.emit('overrideCommands', 'O|FORWARD-|001');
         break;
 
         case 39: // right
+        console.log("right");
 	socket.emit('overrideCommands', 'O|TURNRIGH|001');
         break;
 
         case 40: // down
+        console.log("down");
 	socket.emit('overrideCommands', 'O|BACKWARD|001');
         break;
 	
 	case 67: // C - delete the commands
+        console.log("Clear");
 	socket.emit('clearCommands', 'clear');
         break;
 
 	case 76: // L - Land
+        console.log("land");
 	socket.emit('overrideCommands', 'O|LAND----|');
         break;
 	
 	case 80: // P - Picture
+        console.log("picture");
 	socket.emit('overrideCommands', 'O|TAKEPIC-|');
         break;
 
 	case 81: // Q - Quit
+        console.log("quit");
 	socket.emit('overrideCommands', 'Q|');
         break;
 	
-	case 84: // L - Take Off
+	case 84: // T - Take Off
+        console.log("Takeoff");
 	socket.emit('overrideCommands', 'O|TAKEOFF-|');
         break;
 
@@ -108,12 +116,12 @@ $(document).keydown(function(e) {
 
 	function PushFlightPlan1(){
   		console.log('Send Flight Plan 1');
-		socket.emit('triggerFlightPlan1', 'N|TAKEOFF-|\nN|WAIT----|005\nN|LAND----|');
+		socket.emit('triggerFlightPlan1', 'N|TAKEOFF-|\nN|WAIT----|003\nN|TAKEPIC-|\nN|WAIT----|003\nN|LAND----|\nQ');
         }
 
 	function PushFlightPlan2(){
   		console.log('Send Flight Plan 2');
-		socket.emit('triggerFlightPlan2', 'N|TAKEOFF-|\nN|WAIT----|003\nN|TAKEPIC-|\nN|FORWARD-|010\nN|LAND----|\nQ');
+		socket.emit('triggerFlightPlan1', 'N|TAKEOFF-|\nN|WAIT----|003\nN|FORWARD-|010\nN|LAND----|\nQ');
         }
 
 

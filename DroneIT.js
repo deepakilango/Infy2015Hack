@@ -28,8 +28,9 @@ io.sockets.on('connection', function(socket) {
         var child = spawn('./Build/DroneIT', '');
 
         child.stdout.on('data', function(chunk) {
-            console.log('Data from CPP');
-            var message = chunk.toString('ascii');
+            var message = chunk.toString('ascii');            
+            console.log('Data from CPP',message);
+            
             var splitResponse = message.split("\n");
             for (var i = 0; i < splitResponse.length; i++) {
                 if (splitResponse[i].search("DroneIT") != -1) {
@@ -37,6 +38,7 @@ io.sockets.on('connection', function(socket) {
                     var droneResponseLen = droneResponse.length;
                     if (droneResponse != -1 && droneResponseLen == 14) {
                         console.log("call OCR Script");
+			//./shellscript/doPull.sh
                     }
                     socket.emit('DroneStatus', droneResponse);
                 }
@@ -61,21 +63,22 @@ io.sockets.on('connection', function(socket) {
         var child = spawn('./Build/DroneIT', '');
 
         child.stdout.on('data', function(chunk) {
-            console.log('Data from CPP');
             //socket.emit('DroneStatus', chunk.toString('ascii'));
             var message = chunk.toString('ascii');
+            console.log('Data from CPP FP1',message);
             var splitResponse = message.split("\n");
             for (var i = 0; i < splitResponse.length; i++) {
                 if (splitResponse[i].search("DroneIT") != -1) {
                     var droneResponse = splitResponse[i].substr(splitResponse[i].indexOf("::") + 1)
                     var droneResponseLen = droneResponse.length;
-                    if (droneResponse != -1 && droneResponseLen == 14) {
-                       
+                    console.log(droneResponse,droneResponse.length);
+                    if (droneResponse != -1 && droneResponseLen == 15) {
+                        console.log("callingOCR");
 			var child2 = spawn('./shellscript/doPull.sh', '');
 			child2.stdout.on('data', function(chunk) {
-			    console.log('Data from OCR');
 			    //socket.emit('DroneStatus', chunk.toString('ascii'));
 			    var message2 = chunk.toString('ascii');
+			    console.log('Data from OCR',message2);
 			    var splitResponse2 = message2.split("\n");
 			    for (var i = 0; i < splitResponse2.length; i++) {
 				if (splitResponse2[i].search("DroneIT") != -1) {
@@ -107,9 +110,9 @@ io.sockets.on('connection', function(socket) {
         console.log("Fly Flight Plan 2");
 	var child2 = spawn('./shellscript/doPull.sh', '');
 			child2.stdout.on('data', function(chunk) {
-			    console.log('Data from OCR');
 			    //socket.emit('DroneStatus', chunk.toString('ascii'));
 			    var message2 = chunk.toString('ascii');
+			    console.log('Data from OCR FP2', message2);
 			    var splitResponse2 = message2.split("\n");
 			     console.log(splitResponse2)
 			    for (var i = 0; i < splitResponse2.length; i++) {
@@ -131,7 +134,7 @@ io.sockets.on('connection', function(socket) {
 
 
     socket.on('overrideCommands', function(data) {
-        console.log("data" + data);
+        console.log("Override Command :" + data);
         client.rpush('NavCommands', data);
     });
 });
